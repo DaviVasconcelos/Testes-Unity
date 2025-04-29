@@ -3,13 +3,15 @@ using UnityEngine.Rendering;
 
 // Garante que o script usará o Rigidbody2D
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Player))]
 
 public class PlayerController : MonoBehaviour
 {
+    public Player player;
+
     public Animator playerAnimator;
     float input_x = 0;
     float input_y = 0;
-    public float speed = 2.5f;
     bool isWalking = false;
 
     Rigidbody2D rig2d;
@@ -23,6 +25,9 @@ public class PlayerController : MonoBehaviour
 
         // atualiza o rig2d com base no rigidbody2d da unity 
         rig2d = GetComponent<Rigidbody2D>();
+
+        // Para pegar a speed da entidade player
+        player = GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -60,6 +65,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         // rig2d.position é a posição atual do player, o + movement é para somar o input, assim movendo
-        rig2d.MovePosition(rig2d.position + movement * speed * Time.fixedDeltaTime);
+        rig2d.MovePosition(rig2d.position + movement * player.entity.speed * Time.fixedDeltaTime);
     }
 }
