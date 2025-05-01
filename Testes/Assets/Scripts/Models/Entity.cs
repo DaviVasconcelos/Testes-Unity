@@ -35,6 +35,8 @@ public class Entity
 
     public int strength = 1;
 
+    public int defense = 1;
+
     public int resistance = 1;
 
     public int magic = 1;

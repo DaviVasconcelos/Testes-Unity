@@ -1,9 +1,18 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public Entity entity;
+
+    [Header("Regen HP/MP")]
+    public bool RegenHpEnable = true;
+    public bool RegenMpEnable = true;
+    public float HpRegenSeconds = 1f;
+    public float MpRegenSeconds = 3f;
+    public int HpRegenQuantity = 1;
+    public int MpRegenQuantity = 1;
 
     // Game controller
     [Header("GameController")]
@@ -25,7 +34,10 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // Funções de cálculo
         entity.maxHealth = controller.CalculateHealth(this);
+        entity.maxMana = controller.CalculateMana(this);
+        entity.maxStamina = controller.CalculateStamina(this);
 
         // Atributos que começam cheios
         entity.currentHealth = entity.maxHealth;
@@ -43,6 +55,10 @@ public class Player : MonoBehaviour
 
         // XP começa no 0
         experience.value = 0;
+
+        // Iniciar a regeneração de HP e MP
+        StartCoroutine(regenHealth());
+        StartCoroutine(regenMana());
     }
 
     private void Update()
@@ -61,6 +77,54 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && entity.currentHealth < entity.maxHealth)
         {
             entity.currentHealth += 10;
+        }
+    }
+
+    IEnumerator regenHealth()
+    {
+        bool fullHealth = true;
+
+        if (entity.currentHealth >= entity.maxHealth)
+        {
+            fullHealth = false;
+        }
+        else
+        {
+            fullHealth = true;
+        }
+
+        if (RegenHpEnable == true)
+        {
+            while (fullHealth == false) // Loop enquanto a vida não estiver completa
+            {
+                // Regenera 1 por segundo
+                entity.currentHealth += HpRegenQuantity;
+                yield return new WaitForSeconds(HpRegenSeconds);
+            }
+        }
+    }
+
+    IEnumerator regenMana()
+    {
+        bool fullMana = true;
+
+        if (entity.currentMana >= entity.maxMana)
+        {
+            fullMana = false;
+        }
+        else
+        {
+            fullMana = true;
+        }
+
+        if (RegenHpEnable == true)
+        {
+            while (fullMana == false) // Loop enquanto a mana não estiver completa
+            {
+                // Regenera 1 por segundo
+                entity.currentMana += MpRegenQuantity;
+                yield return new WaitForSeconds(MpRegenSeconds);
+            }
         }
     }
 }
