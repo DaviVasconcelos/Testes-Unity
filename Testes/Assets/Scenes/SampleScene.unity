@@ -1483,6 +1483,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &693929659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 693929660}
+  - component: {fileID: 693929661}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &693929660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693929659}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.46613693, y: -0.13580833, z: 0.053361792}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &693929661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693929659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf9b153065b10042b324221cf516ed3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &833168593
 GameObject:
   m_ObjectHideFlags: 0
@@ -6396,6 +6440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity:
+    level: 1
     name: Davizera
     currentHealth: 100
     maxHealth: 100
@@ -6403,10 +6448,11 @@ MonoBehaviour:
     maxMana: 100
     currentStamina: 100
     maxStamina: 100
-    strength: 99
-    resistance: 99
-    magic: 99
+    strength: 3
+    resistance: 3
+    magic: 3
     speed: 2
+  controller: {fileID: 693929661}
   health: {fileID: 2056164390}
   mana: {fileID: 1154508957}
   stamina: {fileID: 1619440013}
@@ -7140,3 +7186,4 @@ SceneRoots:
   - {fileID: 1588982701}
   - {fileID: 40760846}
   - {fileID: 2011578092}
+  - {fileID: 693929660}

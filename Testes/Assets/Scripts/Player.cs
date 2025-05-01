@@ -5,6 +5,10 @@ public class Player : MonoBehaviour
 {
     public Entity entity;
 
+    // Game controller
+    [Header("GameController")]
+    public GameController controller;
+
     // Sliders de status da interface
     [Header("PlayerUI")]
     public Slider health;
@@ -14,6 +18,15 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        // Game controller
+        if (controller == null) // Caso o gamecontroller não for anexado, o o erro acontece e não passa dele
+        { 
+            Debug.LogError("Anexar GameController no player");
+            return;
+        }
+
+        entity.maxHealth = controller.CalculateHealth(this);
+
         // Atributos que começam cheios
         entity.currentHealth = entity.maxHealth;
         entity.currentMana = entity.maxMana;
@@ -45,7 +58,7 @@ public class Player : MonoBehaviour
             entity.currentHealth -= 10;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && entity.currentHealth < 100)
+        if (Input.GetKeyDown(KeyCode.Space) && entity.currentHealth < entity.maxHealth)
         {
             entity.currentHealth += 10;
         }

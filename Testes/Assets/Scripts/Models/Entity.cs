@@ -5,6 +5,10 @@ using System;
 
 public class Entity
 {
+    [Header("Game")]
+
+    public int level;
+
     [Header("Name")]
 
     public string name;
