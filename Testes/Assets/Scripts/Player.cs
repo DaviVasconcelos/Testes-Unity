@@ -6,7 +6,23 @@ public class Player : MonoBehaviour
 {
     public Entity entity;
 
-    [Header("Regen HP/MP")]
+    // Código para o objeto player persistir em mudanças de cenas:
+    public static Player Instance; // Singleton
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Persiste entre cenas
+        }
+        else
+        {
+            Destroy(gameObject); // Evita duplicatas
+        }
+    }
+
+        [Header("Regen HP/MP")]
     public bool RegenHpEnable = true;
     public bool RegenMpEnable = true;
     public float HpRegenSeconds = 1f;
