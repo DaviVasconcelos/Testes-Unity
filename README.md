@@ -1,7 +1,7 @@
 # 🎮 Testes-Unity | Unity Learning Project
 
 [![Unity Version](https://img.shields.io/badge/Unity-2022.3%2B-blue.svg)](https://unity3d.com/)
-[![GitHub Issues](https://img.shields.io/github/issues/seu-usuario/Testes-Unity)](https://github.com/seu-usuario/Testes-Unity/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/DaviVasconcelos/Testes-Unity)](https://github.com/DaviVasconcelos/Testes-Unity/issues)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Um projeto simples 2D para estudo e prática de conceitos da Unity e C#, com experimentação de diversos assets e mecânicas de jogo.
