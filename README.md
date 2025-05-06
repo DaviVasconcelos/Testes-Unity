@@ -13,7 +13,7 @@ Um projeto simples 2D para estudo e prática de conceitos da Unity e C#, com exp
    Antes de começar, verifique se você possui:
    - [Unity Hub](https://unity.com/download) versão 6.0.0 ou superior.
    - [Git](https://git-scm.com/downloads) instalado
-   - IDE para desenvolvimento (Recomendo [Visual Studio](https://visualstudio.microsoft.com/)
+   - IDE para desenvolvimento (Recomendo [Visual Studio](https://visualstudio.microsoft.com/))
 
 ## 🚀 Começando
 
