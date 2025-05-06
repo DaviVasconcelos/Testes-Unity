@@ -11,7 +11,7 @@ Um projeto simples 2D para estudo e prática de conceitos da Unity e C#, com exp
 ## 📋 Pré-requisitos
 
    Antes de começar, verifique se você possui:
-   - [Unity Hub](https://unity.com/download) versão 6.0.0 ou superior.
+   - [Unity Hub](https://unity.com/download)
    - [Git](https://git-scm.com/downloads) instalado
    - IDE para desenvolvimento (Recomendo [Visual Studio](https://visualstudio.microsoft.com/))
 
@@ -30,12 +30,12 @@ Um projeto simples 2D para estudo e prática de conceitos da Unity e C#, com exp
 ## 2. Clone o repositório:
 
  ```bash
-git clone https://github.com/seu-usuario/Testes-Unity.git
+git clone https://github.com/DaviVasconcelos/Testes-Unity.git
 ```
    Ou usando SSH:
 
  ```bash
-git clone git@github.com:seu-usuario/Testes-Unity.git
+git clone https://github.com/DaviVasconcelos/Testes-Unity.git
 ```
    Navegue até a pasta do projeto:
 
@@ -50,7 +50,7 @@ cd Testes-Unity
 
    Selecione a pasta do projeto clonada
 
-   Certifique-se de usar a versão correta da Unity (2022.3 ou superior)
+   Certifique-se de usar a versão correta da Unity (Unity 6.0.0 ou superior)
 
 ## 📂 Estrutura do Projeto
 
