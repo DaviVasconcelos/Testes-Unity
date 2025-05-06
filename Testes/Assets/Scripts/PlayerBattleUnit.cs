@@ -5,13 +5,13 @@ public class PlayerBattleUnit : MonoBehaviour
 {
 
     public string playerName;
-    public int enemyLvl;
+    public int playerLvl;
     public int damage;
     public int defense;
     public int maxHP;
     public int currentHP;
 
-    private void Start()
+    private void Awake() // Usar awake no lugar de start é melhor, porque no start ele inicializa primeiro a HUD, ficando sem os dados do jogador
     {
         // Pega os dados do objeto player para utilizar em batalha
         if (Player.Instance != null && Player.Instance.entity != null)
@@ -22,6 +22,7 @@ public class PlayerBattleUnit : MonoBehaviour
             currentHP = Player.Instance.entity.currentHealth;
             damage = Player.Instance.entity.strength;
             defense = Player.Instance.entity.defense;
+            playerLvl = Player.Instance.entity.level;
 
             // Debug dos dados iniciais
             Debug.Log("=== DADOS DO JOGADOR NA BATALHA ===");
