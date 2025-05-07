@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Trevoso
   enemyLvl: 99
-  damage: 2
+  damage: 10
   defense: 10
   maxHP: 20
   currentHP: 20
