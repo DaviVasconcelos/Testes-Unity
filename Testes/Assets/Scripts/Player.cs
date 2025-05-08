@@ -54,9 +54,9 @@ public class Player : MonoBehaviour
         }
 
         // Funções de cálculo
-        entity.maxHealth = controller.CalculateHealth(this);
-        entity.maxMana = controller.CalculateMana(this);
-        entity.maxStamina = controller.CalculateStamina(this);
+        entity.maxHealth = controller.CalculateHealth(entity);
+        entity.maxMana = controller.CalculateMana(entity);
+        entity.maxStamina = controller.CalculateStamina(entity);
 
         // Atributos que começam cheios
         entity.currentHealth = entity.maxHealth;

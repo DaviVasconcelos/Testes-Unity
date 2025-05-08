@@ -41,4 +41,6 @@ public class Entity
 
     public float speed = 2f;
 
+    public bool isDead = false;
+
 }

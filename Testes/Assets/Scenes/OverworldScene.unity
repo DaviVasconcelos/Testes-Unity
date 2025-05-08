@@ -1801,11 +1801,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8941687927480974468, guid: 8baf639733e3f344b967de65feec6a5b, type: 3}
   m_PrefabInstance: {fileID: 6312376319078062377}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1081079798 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1393968895146551690, guid: 8baf639733e3f344b967de65feec6a5b, type: 3}
-  m_PrefabInstance: {fileID: 6312376319078062377}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1081079804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1821,22 +1816,29 @@ MonoBehaviour:
   entity:
     level: 23
     name: "Corn\xE3o"
-    currentHealth: 23
-    maxHealth: 26
+    currentHealth: 100
+    maxHealth: 100
     currentMana: 10
     maxMana: 10
     currentStamina: 0
     maxStamina: 0
-    strength: 1
+    strength: 20
     defense: 10
-    resistance: 1
     magic: 1
     speed: 2
-  animator: {fileID: 1081079798}
+    isDead: 0
   controller: {fileID: 693929661}
   waypointList: []
   arrivalDistance: 0.5
   waitTime: 5
+  inCombat: 0
+  target: {fileID: 0}
+  experience: 0
+  lootMoneyMin: 100
+  lootMoneyMax: 400
+  prefab: {fileID: 8941687927480974468, guid: 8baf639733e3f344b967de65feec6a5b, type: 3}
+  respawn: 0
+  respawnTime: 10
 --- !u!1 &1139123126
 GameObject:
   m_ObjectHideFlags: 0
@@ -7162,6 +7164,14 @@ PrefabInstance:
       propertyPath: experience
       value: 
       objectReference: {fileID: 1656437692}
+    - target: {fileID: 8661944243522234738, guid: 7a08b96bec3de14459cb1ea1af125ba9, type: 3}
+      propertyPath: entity.level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8661944243522234738, guid: 7a08b96bec3de14459cb1ea1af125ba9, type: 3}
+      propertyPath: entity.strength
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
