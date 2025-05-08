@@ -37,8 +37,6 @@ public class Entity
 
     public int defense = 1;
 
-    public int resistance = 1;
-
     public int magic = 1;
 
     public float speed = 2f;

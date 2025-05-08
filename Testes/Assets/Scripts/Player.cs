@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
         }
     }
 
-        [Header("Regen HP/MP")]
+    [Header("Regen HP/MP")]
     public bool RegenHpEnable = true;
     public bool RegenMpEnable = true;
     public float HpRegenSeconds = 1f;
@@ -33,6 +33,9 @@ public class Player : MonoBehaviour
     // Game controller
     [Header("GameController")]
     public GameController controller;
+
+    [Header("Combat")]
+    public bool inCombat = false;
 
     // Sliders de status da interface
     [Header("PlayerUI")]
