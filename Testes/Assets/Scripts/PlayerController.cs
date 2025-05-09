@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         // rig2d.position é a posição atual do player, o + movement é para somar o input, assim movendo
-        rig2d.MovePosition(rig2d.position + movement * player.entity.speed * Time.fixedDeltaTime);
+        // o normalizedMovement normaliza o vetor, corrigindo a velocidade acelerada ao andar na diagonal
+        Vector2 normalizedMovement = movement.normalized;
+        rig2d.MovePosition(rig2d.position + normalizedMovement * player.entity.speed * Time.fixedDeltaTime);
     }
 }
