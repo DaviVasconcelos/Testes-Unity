@@ -21,7 +21,8 @@ public class PlayerBattleUnit : MonoBehaviour
         if (enemy.currentHP <= 0)
         {
             return true;
-        } else
+        }
+        else
         {
             return false;
         }

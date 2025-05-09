@@ -3,30 +3,46 @@ using UnityEngine;
 public class EnemyEncounter : MonoBehaviour
 {
     [SerializeField] private string battleSceneName = "TurnBattle";
+    private BoxCollider2D enemyCollider;
+
+    private void Start()
+    {
+        enemyCollider = GetComponent<BoxCollider2D>();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            // Desativa o Sprite e o Controle do Player
-            Player player = other.GetComponent<Player>();
-            SpriteRenderer playerSprite = other.GetComponent<SpriteRenderer>();
-            PlayerController playerController = other.GetComponent<PlayerController>();
+            // Verifica se o inimigo ainda não foi destruído
+            if (GetComponent<Enemy>() == null || GetComponent<Enemy>().entity == null)
+            {
+                Debug.LogError("Inimigo ou dados da entidade inválidos!");
+                return;
+            }
 
-            if (playerSprite != null) playerSprite.enabled = false;
-            if (playerController != null) playerController.enabled = false;
+            // Garantir que o BattleManager está pronto
+            if (!BattleManager.Instance.gameObject.activeInHierarchy)
+            {
+                BattleManager.Instance.gameObject.SetActive(true);
+            }
 
-            // Desativa o Sprite do inimigo
-            Enemy enemy = other.GetComponent<Enemy>();
-            SpriteRenderer enemySprite = GetComponent<SpriteRenderer>();
+            // DESATIVAÇÃO DO OVERWORLDROOT (e todos os filhos, incluindo Grid e Canvas)
+            OverworldReferences.Instance.overworldRoot.SetActive(false);
 
-            if (enemySprite != null) enemySprite.enabled = false;
+            // Atribui o inimigo atual ANTES de iniciar a batalha
+            BattleManager.Instance.currentEnemy = GetComponent<Enemy>();
 
-            // Salva a posição do jogador antes da batalha
+            // Opcional: Esconde o inimigo imediatamente
+            GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
+
+            // Salva posição e inicia batalha
             PlayerPositionManager.SavePlayerPosition();
-
-            // Inicia a batalha
             BattleManager.Instance.StartBattle(battleSceneName);
+
+            // Desativa o Sprite e o Controle do Player
+            Player.Instance.GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 }

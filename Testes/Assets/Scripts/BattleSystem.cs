@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Declaração dos estados da batalha
@@ -35,15 +36,25 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle() // para ser IEnumerator, ou seja, uma coroutine (estudar mais depois) precisa do yield e do start coroutine
     {
-        // Pega o GameObject do player baseado na instanciação do player
         GameObject PlayerGO = Instantiate(PlayerPrefab, PlayerBattleStation);
         playerUnit = PlayerGO.GetComponent<PlayerBattleUnit>();
 
-        // Pega o GameObject do enemy baseado na instanciação do enemy
+        // Usar o inimigo do BattleManager em vez do método estático
+        Enemy overworldEnemy = BattleManager.Instance.currentEnemy;
+
+        if (overworldEnemy == null)
+        {
+            Debug.LogError("Inimigo não encontrado no BattleManager!");
+            yield break;
+        }
+
         GameObject EnemyGO = Instantiate(EnemyPrefab, EnemyBattleStation);
         enemyUnit = EnemyGO.GetComponent<EnemyBattleUnit>();
 
-        enemyName.text = enemyUnit.enemyName;
+        // Copiar dados do inimigo
+        enemyUnit.enemyName = overworldEnemy.entity.name;
+        enemyUnit.maxHP = overworldEnemy.entity.maxHealth;
+        enemyUnit.currentHP = overworldEnemy.entity.currentHealth;
 
         playerHUD.setHUD(playerUnit);
         enemyHUD.setHUD(enemyUnit);
@@ -52,6 +63,7 @@ public class BattleSystem : MonoBehaviour
 
         state = BattleState.PLAYERTURN;
         PlayerTurn();
+
     }
 
     void PlayerTurn()
@@ -145,10 +157,43 @@ public class BattleSystem : MonoBehaviour
         if (state == BattleState.WON)
         {
             dialogText.text = "Inimigo está morto";
+            StartCoroutine(ReturnToOverworld());
         } else if (state == BattleState.LOST)
         {
             dialogText.text = "Você morreu";
+            StartCoroutine(GameOver());
         }
+    }
+
+    IEnumerator ReturnToOverworld()
+    {
+        yield return new WaitForSeconds(2f);
+        // Verificação reforçada
+        if (BattleManager.Instance != null)
+        {
+            // Usar StartCoroutine diretamente no Instance
+            yield return BattleManager.Instance.StartCoroutine(
+                BattleManager.Instance.EndBattle(true)
+            );
+        }
+        else
+        {
+            // Fallback seguro
+            SceneManager.LoadScene("OverworldScene");
+        }
+
+        // Destrói o próprio BattleSystem após conclusão
+        // Destroy(gameObject);
+    }
+
+    IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(2f);
+        BattleManager.Instance.EndBattle(false);
+        SceneManager.LoadScene("GameOverScene");
+        // Ativa elementos via código do Player
+        Player.Instance.GetComponent<SpriteRenderer>().enabled = true;
+        Player.Instance.GetComponent<PlayerController>().enabled = true;
     }
 
     public void OnAttackButton()

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class EnemyBattleUnit : MonoBehaviour
@@ -12,49 +11,42 @@ public class EnemyBattleUnit : MonoBehaviour
     public int maxMana;
     public int currentMana;
 
-    public bool MakeDamage(int dmg, PlayerBattleUnit player) // verifica se o hp do jogador já chegou a 0
+    public bool MakeDamage(int dmg, PlayerBattleUnit player)
     {
         player.currentHP -= dmg;
-
-        if (player.currentHP <= 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return player.currentHP <= 0;
     }
 
-    private void Awake() // Usar awake no lugar de start é melhor, porque no start ele inicializa primeiro a HUD, ficando sem os dados do jogador
+    private void Awake()
     {
-        // Pega os dados do objeto player para utilizar em batalha
-        if (Enemy.Instance != null && Enemy.Instance.entity != null)
-        {
-            // Acesse os dados da entidade
-            enemyName = Enemy.Instance.entity.name;
-            maxHP = Enemy.Instance.entity.maxHealth;
-            currentHP = Enemy.Instance.entity.currentHealth;
-            damage = Enemy.Instance.entity.strength;
-            defense = Enemy.Instance.entity.defense;
-            enemyLvl = Enemy.Instance.entity.level;
-            currentMana = Enemy.Instance.entity.currentMana;
-            maxMana = Enemy.Instance.entity.maxMana;
+        // Acessa o inimigo persistente da Overworld
+        Enemy overworldEnemy = BattleManager.Instance.currentEnemy;
 
-            /*
-            // Debug dos dados iniciais
-            Debug.Log("=== DADOS DO JOGADOR NA BATALHA ===");
-            Debug.Log($"Nome: {playerName}");
-            Debug.Log($"Level: {Player.Instance.entity.level}");
-            Debug.Log($"HP: {currentHP}/{maxHP}");
-            Debug.Log($"Força: {damage}");
-            Debug.Log($"Defesa: {defense}");
-            Debug.Log($"Velocidade: {Player.Instance.entity.speed}");
-            */
+        // Verificação crítica
+        if (overworldEnemy == null || overworldEnemy.entity == null)
+        {
+            Debug.LogError("Inimigo da Overworld não encontrado ou dados da entidade inválidos!");
+            return; // Evita o código abaixo se houver erro
+        }
+
+        if (overworldEnemy != null && overworldEnemy.entity != null)
+        {
+            // Copia os dados da entidade do inimigo da Overworld
+            enemyName = overworldEnemy.entity.name;
+            maxHP = overworldEnemy.entity.maxHealth;
+            currentHP = overworldEnemy.entity.currentHealth;
+            damage = overworldEnemy.entity.strength;
+            defense = overworldEnemy.entity.defense;
+            enemyLvl = overworldEnemy.entity.level;
+            currentMana = overworldEnemy.entity.currentMana;
+            maxMana = overworldEnemy.entity.maxMana;
+
+            // Atualiza a vida atual para o valor persistido
+            currentHP = overworldEnemy.entity.currentHealth;
         }
         else
         {
-            Debug.LogError("Enemy ou entity não encontrado!");
+            Debug.LogError("Inimigo da Overworld não encontrado ou dados da entidade inválidos!");
         }
-    } 
+    }
 }

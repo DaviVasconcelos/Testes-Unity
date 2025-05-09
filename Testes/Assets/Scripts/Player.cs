@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
@@ -145,5 +146,41 @@ public class Player : MonoBehaviour
                 yield return new WaitForSeconds(MpRegenSeconds);
             }
         }
+    }
+
+    // Mecânica de trocar de cenas
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded; // Assina o evento de cena carregada
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Descarrega para evitar vazamentos
+    }
+
+    // Método chamado toda vez que uma cena é carregada
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "OverworldScene")
+        {
+            StartCoroutine(ReassignUIAfterDelay());
+        }
+    }
+
+    IEnumerator ReassignUIAfterDelay()
+    {
+        // Espera 1 frame para garantir que a UI está ativa
+        yield return null;
+
+        health = GameObject.Find("HPslider").GetComponent<Slider>();
+        mana = GameObject.Find("MPslider").GetComponent<Slider>();
+        stamina = GameObject.Find("STMslider").GetComponent<Slider>();
+        experience = GameObject.Find("EXPslider").GetComponent<Slider>();
+
+        // Atualiza os valores
+        health.value = entity.currentHealth;
+        mana.value = entity.currentMana;
+        stamina.value = entity.currentStamina;
     }
 }

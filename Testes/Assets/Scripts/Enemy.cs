@@ -1,14 +1,31 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 
 public class Enemy : MonoBehaviour
 {
+    private void OnEnable()
+    {
+        if (overworldEnemyInstance == null && SceneManager.GetActiveScene().name == "OverworldScene")
+        {
+            overworldEnemyInstance = this;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (overworldEnemyInstance == this)
+        {
+            overworldEnemyInstance = null;
+        }
+    }
+
     [Header("Controller")]
     public Entity entity = new Entity(); // Recebe a mesma entidade do player
     public GameController controller;
     // Código para o objeto enemy persistir em mudanças de cenas:
-    public static Enemy Instance; // Singleton
+    private static Enemy overworldEnemyInstance;
 
     [Header("Patrol")]
     public Transform[] waypointList;
@@ -65,16 +82,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Awake()
+    public static Enemy GetOverworldEnemy()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // Persiste entre cenas
-        }
-        else
-        {
-            Destroy(gameObject); // Evita duplicatas
-        }
+        return overworldEnemyInstance;
+    }
+
+        public void ResetEnemy()
+    {
+        entity.currentHealth = entity.maxHealth;
+        gameObject.SetActive(true);
+        GetComponent<SpriteRenderer>().enabled = true;
+        GetComponent<BoxCollider2D>().enabled = true;
     }
 }

@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance;
+    public Enemy currentEnemy;
 
     private void Awake()
     {
@@ -27,11 +29,13 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator LoadBattleSceneAsync(string sceneName)
     {
-        // Carrega a cena de combate em segundo plano
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        Camera.main.GetComponent<AudioListener>().enabled = false;
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         asyncLoad.allowSceneActivation = false;
 
-        // Aguarda até que a cena esteja quase carregada
+        Player.Instance.GetComponent<PlayerController>().enabled = false;
+
         while (!asyncLoad.isDone)
         {
             if (asyncLoad.progress >= 0.9f)
@@ -40,5 +44,47 @@ public class BattleManager : MonoBehaviour
             }
             yield return null;
         }
+
+        // Remover componentes duplicados após carregar
+        Scene battleScene = SceneManager.GetSceneByName(sceneName);
+        foreach (GameObject rootObj in battleScene.GetRootGameObjects())
+        {
+            EventSystem es = rootObj.GetComponent<EventSystem>();
+            if (es != null) Destroy(es.gameObject);
+
+            AudioListener al = rootObj.GetComponent<AudioListener>();
+            if (al != null) Destroy(al);
+        }
+
+        if (currentEnemy != null)
+        {
+            currentEnemy.gameObject.SetActive(false);
+        }
+    }
+    public IEnumerator EndBattle(bool playerWon)
+    {
+        if (Camera.main != null)
+        {
+            Camera.main.GetComponent<AudioListener>().enabled = true;
+        }
+
+        AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync("TurnBattle");
+        yield return asyncUnload;
+
+        // Reativa elementos da cena principal
+        //GameObject.Find("Grid").SetActive(true);
+        //GameObject.Find("Canvas").SetActive(true);
+
+        if (playerWon && currentEnemy != null)
+        {
+            Destroy(currentEnemy.gameObject);
+            currentEnemy = null;
+        }
+
+        OverworldReferences.Instance.overworldRoot.SetActive(true);
+
+        // Restaura componentes do Player
+        Player.Instance.GetComponent<SpriteRenderer>().enabled = true;
+        Player.Instance.GetComponent<PlayerController>().enabled = true;
     }
 }
