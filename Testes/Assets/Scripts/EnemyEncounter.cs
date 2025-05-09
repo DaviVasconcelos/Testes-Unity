@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EnemyEncounter : MonoBehaviour
 {
-    [SerializeField] private EnemyData enemyData; // Dados do inimigo
     [SerializeField] private string battleSceneName = "TurnBattle";
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -17,8 +16,11 @@ public class EnemyEncounter : MonoBehaviour
             if (playerSprite != null) playerSprite.enabled = false;
             if (playerController != null) playerController.enabled = false;
 
-            // Passa os dados do inimigo para o BattleManager
-            BattleManager.Instance.SetEnemyData(enemyData);
+            // Desativa o Sprite do inimigo
+            Enemy enemy = other.GetComponent<Enemy>();
+            SpriteRenderer enemySprite = GetComponent<SpriteRenderer>();
+
+            if (enemySprite != null) enemySprite.enabled = false;
 
             // Salva a posição do jogador antes da batalha
             PlayerPositionManager.SavePlayerPosition();

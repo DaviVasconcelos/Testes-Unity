@@ -1,12 +1,10 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance;
-
-    // Dados do inimigo atual
-    private EnemyData currentEnemyData;
 
     private void Awake()
     {
@@ -21,21 +19,26 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    // Define os dados do inimigo para a batalha
-    public void SetEnemyData(EnemyData data)
-    {
-        currentEnemyData = data;
-    }
-
-    // Retorna os dados do inimigo atual
-    public EnemyData GetEnemyData()
-    {
-        return currentEnemyData;
-    }
-
     // Método para iniciar a batalha
     public void StartBattle(string battleSceneName)
     {
-        SceneManager.LoadScene(battleSceneName);
+        StartCoroutine(LoadBattleSceneAsync(battleSceneName));
+    }
+
+    private IEnumerator LoadBattleSceneAsync(string sceneName)
+    {
+        // Carrega a cena de combate em segundo plano
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        asyncLoad.allowSceneActivation = false;
+
+        // Aguarda até que a cena esteja quase carregada
+        while (!asyncLoad.isDone)
+        {
+            if (asyncLoad.progress >= 0.9f)
+            {
+                asyncLoad.allowSceneActivation = true;
+            }
+            yield return null;
+        }
     }
 }
