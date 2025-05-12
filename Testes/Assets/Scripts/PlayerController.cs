@@ -8,7 +8,6 @@ using UnityEngine.Rendering;
 public class PlayerController : MonoBehaviour
 {
     public Player player;
-
     public Animator playerAnimator;
     float input_x = 0;
     float input_y = 0;
@@ -23,14 +22,13 @@ public class PlayerController : MonoBehaviour
         // Quando o jogo iniciar, a animação idle começa
         isWalking = false;
 
-        // atualiza o rig2d com base no rigidbody2d da unity 
+        // atribui o rig2d com base no rigidbody2d da unity 
         rig2d = GetComponent<Rigidbody2D>();
 
         // Para pegar a speed da entidade player
         player = GetComponent<Player>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Mecânica de movimentação 
@@ -56,6 +54,7 @@ public class PlayerController : MonoBehaviour
 
         playerAnimator.SetBool("isWalking", isWalking);
 
+        // Animação de ataque
         if (Input.GetButtonDown("Fire1"))
         {
             playerAnimator.SetTrigger("attack");
@@ -67,6 +66,6 @@ public class PlayerController : MonoBehaviour
         // rig2d.position é a posição atual do player, o + movement é para somar o input, assim movendo
         // o normalizedMovement normaliza o vetor, corrigindo a velocidade acelerada ao andar na diagonal
         Vector2 normalizedMovement = movement.normalized;
-        rig2d.MovePosition(rig2d.position + normalizedMovement * player.entity.speed * Time.fixedDeltaTime);
+        rig2d.MovePosition(rig2d.position + player.entity.speed * Time.fixedDeltaTime * normalizedMovement);
     }
 }

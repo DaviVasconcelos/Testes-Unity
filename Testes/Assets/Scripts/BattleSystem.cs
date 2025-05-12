@@ -9,39 +9,40 @@ using UnityEngine.UI;
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST, PROCESSING }
 public class BattleSystem : MonoBehaviour
 {
+    // Carrega os prefabs de batalha do player e do inimigo, mudar no inspector para alterar individualmente cada inimigo
     public GameObject PlayerPrefab;
     public GameObject EnemyPrefab;
-
+    // Posições de onde o sprite do player e do inimigo vão ficar
     public Transform PlayerBattleStation;
     public Transform EnemyBattleStation;
-
+    // Unidade em si do player e do inimigo, cada um com seus próprios atributos
     PlayerBattleUnit playerUnit;
     EnemyBattleUnit enemyUnit;
-
+    // Dados para passar para o HUD
     public TextMeshProUGUI enemyName;
-
     public PlayerBattleHUD playerHUD;
     public EnemyBattleHUD enemyHUD;
-
     public TextMeshProUGUI dialogText;
-
+    // Variável para armazenar o estado atual do combate
     public BattleState state;
+
     void Start()
     {
-        // quando a batalha começa, o battlestate é definido como start
+        // Quando a batalha começa, o battlestate é definido como start
         state = BattleState.START;
-
         StartCoroutine(SetupBattle());
     }
 
     IEnumerator SetupBattle() // para ser IEnumerator, ou seja, uma coroutine (estudar mais depois) precisa do yield e do start coroutine
     {
+        // Instancia o playerUnit baseado no prefab de batalha que recebe do inspector e o PlayerBattleStation coloca ele nessa posição
         GameObject PlayerGO = Instantiate(PlayerPrefab, PlayerBattleStation);
         playerUnit = PlayerGO.GetComponent<PlayerBattleUnit>();
 
-        // Usar o inimigo do BattleManager em vez do método estático
+        // Pega os dados do inimigo do overworld e passa para o objeto de batalha
         Enemy overworldEnemy = BattleManager.Instance.currentEnemy;
 
+        // Verifica se é nulo
         if (overworldEnemy == null)
         {
             Debug.LogError("Inimigo não encontrado no BattleManager!");
@@ -51,21 +52,22 @@ public class BattleSystem : MonoBehaviour
         GameObject EnemyGO = Instantiate(EnemyPrefab, EnemyBattleStation);
         enemyUnit = EnemyGO.GetComponent<EnemyBattleUnit>();
 
-        // Copiar dados do inimigo
+        // Copia dados do inimigo e passa para o setHUD
         enemyUnit.enemyName = overworldEnemy.entity.name;
         enemyUnit.maxHP = overworldEnemy.entity.maxHealth;
         enemyUnit.currentHP = overworldEnemy.entity.currentHealth;
 
-        playerHUD.setHUD(playerUnit);
-        enemyHUD.setHUD(enemyUnit);
+        playerHUD.SetHUD(playerUnit);
+        enemyHUD.SetHUD(enemyUnit);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f); // Fica 2 segundos no estado de START
 
+        // Após acabar o estado de START, muda para o turno do player
         state = BattleState.PLAYERTURN;
         PlayerTurn();
-
     }
 
+    // Aparece na interface o diálogo:
     void PlayerTurn()
     {
         dialogText.text = "Escolha sua ação";
@@ -81,20 +83,22 @@ public class BattleSystem : MonoBehaviour
             playerUnit.Heal(HealPower);
 
             // Atualiza HUD primeiro
-            playerHUD.setHp(playerUnit.currentHP);
-            playerHUD.setMana(playerUnit.currentMana);
+            playerHUD.SetHp(playerUnit.currentHP);
+            playerHUD.SetMana(playerUnit.currentMana);
             dialogText.text = "Você consumiu " + playerUnit.HealPrice + " MP para curar " + HealPower + " HP";
 
             yield return new WaitForSeconds(1f);  // Espera para mostrar a mensagem
 
+            // Ao curar, passa o state para o turno do inimigo
             state = BattleState.ENEMYTURN;
             StartCoroutine(EnemyTurn());
         }
-        else
+        else // Não tem mana suficiente
         {
             dialogText.text = "Você não possui mana o suficiente!";
             yield return new WaitForSeconds(1f);  // Espera para mostrar a mensagem
 
+            // Se não tem mana, o turno continua sendo do player
             state = BattleState.PLAYERTURN;
             PlayerTurn();
         }
@@ -102,16 +106,16 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator PlayerAttack()
     {
-        // verifica se o inimigo está morto e faz o dano ser causado
+        // Verifica se o inimigo está morto e faz o dano ser aplicado
         bool isDead = playerUnit.MakeDamage(playerUnit.damage, enemyUnit);
 
-        // passa os dados da batalha para a hud
-        enemyHUD.setHp(enemyUnit.currentHP);
-        dialogText.text = "Ataque bem sucedido";
+        // Passa os dados da batalha para a HUD
+        enemyHUD.SetHp(enemyUnit.currentHP);
+        dialogText.text = "Ataque bem sucedido!";
 
         yield return new WaitForSeconds(2f);
 
-        playerHUD.setMana(playerUnit.currentMana);
+        playerHUD.SetMana(playerUnit.currentMana);
 
         // checa se o inimigo está morto
 
@@ -137,10 +141,10 @@ public class BattleSystem : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // passa os dados da batalha para a hud
-        playerHUD.setHp(playerUnit.currentHP);
+        playerHUD.SetHp(playerUnit.currentHP);
         yield return new WaitForSeconds(1f);
 
-        if (isDead)
+        if (isDead) // Se o player morreu, passa para o state LOST
         {
             state = BattleState.LOST;
             EndBattle();
@@ -182,28 +186,29 @@ public class BattleSystem : MonoBehaviour
             SceneManager.LoadScene("OverworldScene");
         }
 
-        // Destrói o próprio BattleSystem após conclusão
+        // Destrói o próprio BattleSystem após conclusão (não vi necessidade, mas pode ser útil)
         // Destroy(gameObject);
     }
 
     IEnumerator GameOver()
     {
         yield return new WaitForSeconds(2f);
-        BattleManager.Instance.EndBattle(false);
-        SceneManager.LoadScene("GameOverScene");
-        // Ativa elementos via código do Player
-        Player.Instance.GetComponent<SpriteRenderer>().enabled = true;
-        Player.Instance.GetComponent<PlayerController>().enabled = true;
+        StartCoroutine(BattleManager.Instance.EndBattle(false));
+        SceneManager.LoadScene("GameOverScene"); // Criar cena de game over e colocar no inspector
+        // Reativa controles do Player
+        // Player.Instance.GetComponent<SpriteRenderer>().enabled = true;
+        // Player.Instance.GetComponent<PlayerController>().enabled = true;
     }
 
     public void OnAttackButton()
     {
-        if(state != BattleState.PLAYERTURN) // se não for o turno do player, ele somente retorna
+        if (state != BattleState.PLAYERTURN) // se não for o turno do player, ele somente retorna
         {
             return;
-        } else
+        }
+        else
         {
-            state = BattleState.PROCESSING; // Impede novos ataques durante o processamento
+            state = BattleState.PROCESSING; // Impede bug de atacar várias vezes seguidas
             StartCoroutine(PlayerAttack());
         }
     }
@@ -216,7 +221,7 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            state = BattleState.PROCESSING; // Impede novos ataques durante o processamento
+            state = BattleState.PROCESSING; // Impede bug de curar várias vezes seguidas
             StartCoroutine(PlayerHeal());
         }
     }

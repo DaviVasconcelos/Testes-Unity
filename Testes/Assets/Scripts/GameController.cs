@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    // Fórmulas de cálculo de atributos
     public Int32 CalculateHealth(Entity entity)
     {
         // Fórmula: (level * 4) + 50
@@ -28,7 +29,7 @@ public class GameController : MonoBehaviour
         return result;
     }
 
-    // Não imlementado ainda:
+    // Não imlementado ainda, combate fora de turnos:
     public Int32 CalculateDamage(Entity entity, int weaponDamage)
     {
         // Fórmula: (strength * 2) + weaponDamage + (level * 3) + random (1-10)

@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
         entity.currentMana = entity.maxMana;
         entity.currentStamina = entity.maxStamina;
 
-        // Mecânica de andar sozinho (ainda não sei muito bem como funciona)
+        // Mecânica de andar sozinho (não implementado ainda)
         currentWaitTime = waitTime;
 
         if (waypointList.Length > 0)
@@ -87,7 +87,8 @@ public class Enemy : MonoBehaviour
         return overworldEnemyInstance;
     }
 
-        public void ResetEnemy()
+    // Não implementado
+    public void ResetEnemy()
     {
         entity.currentHealth = entity.maxHealth;
         gameObject.SetActive(true);

@@ -10,7 +10,7 @@ public class PlayerBattleHUD : MonoBehaviour
     public Slider manaSlider;
 
     // Verifica alterações nos dados e passa para UI
-    public void setHUD(PlayerBattleUnit player)
+    public void SetHUD(PlayerBattleUnit player)
     {
         nameText.text = player.playerName;
         levelText.text = "Lvl: " + player.playerLvl;
@@ -20,12 +20,12 @@ public class PlayerBattleHUD : MonoBehaviour
         manaSlider.value = player.currentMana;
     }
 
-    public void setHp(int hp)
+    public void SetHp(int hp)
     {
         hpSlider.value = hp;
     }
 
-    public void setMana(int mp)
+    public void SetMana(int mp)
     {
         manaSlider.value = mp;
     }

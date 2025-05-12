@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerPositionManager : MonoBehaviour
 {
+    // Controla a posição do player no mapa
     private static Vector3 savedPosition;
 
     public static void SavePlayerPosition()

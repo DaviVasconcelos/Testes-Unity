@@ -14,6 +14,7 @@ public class PlayerBattleUnit : MonoBehaviour
     public int maxMana;
     public int HealPrice = 10;
 
+    // Mecânica de calcular dano
     public bool MakeDamage(int dmg, EnemyBattleUnit enemy) // verifica se o hp do inimigo já chegou a 0
     {
         enemy.currentHP -= dmg;

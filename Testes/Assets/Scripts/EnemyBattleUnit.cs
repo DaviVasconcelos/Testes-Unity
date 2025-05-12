@@ -19,15 +19,8 @@ public class EnemyBattleUnit : MonoBehaviour
 
     private void Awake()
     {
-        // Acessa o inimigo persistente da Overworld
+        // Acessa o inimigo do Overworld
         Enemy overworldEnemy = BattleManager.Instance.currentEnemy;
-
-        // Verificação crítica
-        if (overworldEnemy == null || overworldEnemy.entity == null)
-        {
-            Debug.LogError("Inimigo da Overworld não encontrado ou dados da entidade inválidos!");
-            return; // Evita o código abaixo se houver erro
-        }
 
         if (overworldEnemy != null && overworldEnemy.entity != null)
         {

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    // M�todo para iniciar a batalha
+    // Método para iniciar a batalha
     public void StartBattle(string battleSceneName)
     {
         StartCoroutine(LoadBattleSceneAsync(battleSceneName));
@@ -29,13 +29,18 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator LoadBattleSceneAsync(string sceneName)
     {
+        // Desativa o audio listener do overworld enquanto carrega a batalha
         Camera.main.GetComponent<AudioListener>().enabled = false;
 
+        // Carrega a cena de batalha em cima do overworld, como aditivo
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         asyncLoad.allowSceneActivation = false;
 
+        // Desativa controles do overworld do player
         Player.Instance.GetComponent<PlayerController>().enabled = false;
 
+        // Carrega 90% da cena → Trava → Libera ativação (allowSceneActivation = true) → Carrega 10% restante → Ativa a cena.
+        // Ou seja, evita carregar a cena antes dela estar pronta
         while (!asyncLoad.isDone)
         {
             if (asyncLoad.progress >= 0.9f)
@@ -45,7 +50,9 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
 
-        // Remover componentes duplicados ap�s carregar
+        // Remover componentes duplicados após carregar
+        /* Medida de segurança para garantir que sistemas globais (EventSystem e AudioListener)
+        não entrem em conflito entre a cena principal e a cena de batalha carregada aditivamente. */
         Scene battleScene = SceneManager.GetSceneByName(sceneName);
         foreach (GameObject rootObj in battleScene.GetRootGameObjects())
         {
@@ -65,15 +72,12 @@ public class BattleManager : MonoBehaviour
     {
         if (Camera.main != null)
         {
+            // Reativa o audio listener do overworld
             Camera.main.GetComponent<AudioListener>().enabled = true;
         }
 
         AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync("TurnBattle");
         yield return asyncUnload;
-
-        // Reativa elementos da cena principal
-        //GameObject.Find("Grid").SetActive(true);
-        //GameObject.Find("Canvas").SetActive(true);
 
         if (playerWon && currentEnemy != null)
         {
@@ -81,6 +85,7 @@ public class BattleManager : MonoBehaviour
             currentEnemy = null;
         }
 
+        // Reativa o overworld
         OverworldReferences.Instance.overworldRoot.SetActive(true);
 
         // Restaura componentes do Player

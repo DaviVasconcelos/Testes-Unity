@@ -9,7 +9,7 @@ public class EnemyBattleHUD : MonoBehaviour
     public Slider hpSlider;
 
     // Verifica alterações nos dados e passa para UI
-    public void setHUD(EnemyBattleUnit unit)
+    public void SetHUD(EnemyBattleUnit unit)
     {
         nameText.text = unit.enemyName;
         levelText.text = "Lvl " + unit.enemyLvl;
@@ -17,7 +17,7 @@ public class EnemyBattleHUD : MonoBehaviour
         hpSlider.value = unit.currentHP;
     }
 
-    public void setHp(int hp)
+    public void SetHp(int hp)
     {
         hpSlider.value = hp;
     }

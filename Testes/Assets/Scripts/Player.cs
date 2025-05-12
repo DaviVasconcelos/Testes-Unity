@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Mecânica de regeneração no overworld
     [Header("Regen HP/MP")]
     public bool RegenHpEnable = true;
     public bool RegenMpEnable = true;
@@ -77,8 +78,8 @@ public class Player : MonoBehaviour
         experience.value = 0;
 
         // Iniciar a regeneração de HP e MP
-        StartCoroutine(regenHealth());
-        StartCoroutine(regenMana());
+        StartCoroutine(RegenHealth());
+        StartCoroutine(RegenMana());
     }
 
     private void Update()
@@ -100,9 +101,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator regenHealth()
+    IEnumerator RegenHealth()
     {
-        bool fullHealth = true;
+        bool fullHealth;
 
         if (entity.currentHealth >= entity.maxHealth)
         {
@@ -124,9 +125,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator regenMana()
+    IEnumerator RegenMana()
     {
-        bool fullMana = true;
+        bool fullMana;
 
         if (entity.currentMana >= entity.maxMana)
         {
